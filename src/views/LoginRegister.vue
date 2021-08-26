@@ -4,15 +4,15 @@
     <div class="forms-container">
       <div class="signin-signup">
         <!--登录-->
-        <el-form  label-width="100px" class="loginForm sign-in-form">
+        <el-form ref="loginForm" :model="loginUser" :rules="rules" label-width="100px" class="loginForm sign-in-form">
           <el-form-item label="邮箱" prop="email">
-            <el-input placeholder="Enter Email..."></el-input>
+            <el-input v-model="loginUser.email" placeholder="Enter Email..."></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input type="password" placeholder="Enter Password..."></el-input>
+            <el-input v-model="loginUser.password" type="password" placeholder="Enter Password..."></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" class="submit-btn">提交</el-button>
+            <el-button @click="handleLogin('loginForm')" type="primary" class="submit-btn">提交</el-button>
           </el-form-item>
 
           <!--找回密码-->
@@ -48,15 +48,59 @@
 </template>
 
 <script>
-import {ref} from "vue";
+import {ref, getCurrentInstance} from "vue";
 
 export default {
   name: "LoginRegister",
   components: {},
   setup(){
+
+    const { ctx } = getCurrentInstance();
     const signUpMode = ref(false);
 
-    return { signUpMode };
+    const loginUser = ref({
+      email: "",
+      password: "",
+    });
+
+    // 校验规则
+    const rules = ref({
+      email: [
+        {
+          type:"email",
+          message: "Email is incorrect...",
+          required: true,
+          trigger: 'blur'
+        },
+      ],
+      password: [
+        {
+          required: true,
+          message: "Password coild not be empty...",
+          trigger: 'blur'
+        },
+        {
+          min: 6,
+          max: 30,
+          message: "Password's length has be 6 to 30 characters...",
+          trigger: 'blur'
+        }
+      ],
+    });
+
+    // 触发登录方法
+    const handleLogin = (formName) => {
+          ctx.$refs[formName].validate((valid) => {
+            if (valid) {
+              alert('submit!');
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+        };
+    
+    return { signUpMode, loginUser, rules , handleLogin};
   },
 };
 </script>
