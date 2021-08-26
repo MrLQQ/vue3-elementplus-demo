@@ -1,10 +1,10 @@
 <template>
-  <div class="index">首页</div>
+  <div class="home">首页</div>
 </template>
 
 <script>
 export default {
-  name: "Index",
+  name: "Home",
   components: {},
 };
 </script>
